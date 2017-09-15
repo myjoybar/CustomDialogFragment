@@ -29,15 +29,16 @@ public class MainActivity extends AppCompatActivity {
 					public void onCancel(DialogInterface dialogInterface) {
 						Log.i(TAG,"onCancel");
 					}
-				}).setOnClickListener(R.id.btn_comfirm, new View.OnClickListener() {
+				}).setOnClickListener(R.id.imv_close, new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						Log.i(TAG,"onClick");
+						Log.i(TAG,"imv_close");
+						builder.disMiss();
 					}
-				}).setOnClickListener(R.id.btn_cancel, new View.OnClickListener() {
+				}).setOnClickListener(R.id.tv_purchase, new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
-						Log.i(TAG,"btn_cancel onClick");
+						Log.i(TAG,"imv_close");
 						builder.disMiss();
 					}
 				});

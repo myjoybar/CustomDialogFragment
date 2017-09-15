@@ -1,10 +1,5 @@
 package me.dialogfragment.library;
 
-/**
- * Created by joybar on 2017/9/1.
- */
-
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -13,9 +8,12 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.util.ArrayMap;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+
 import java.util.Map;
 
 /**
@@ -25,6 +23,7 @@ import java.util.Map;
 public class CustomDialogFragment extends DialogFragment {
 	@LayoutRes
 	private int layoutResID;
+	private boolean isShowTitle = false;
 	private Map<Integer, View.OnLongClickListener> childrenIdLongClickListenerMap;
 	private Map<Integer, View.OnClickListener> childrenIdClickListenerMap;
 	private DialogInterface.OnDismissListener onDismissListener;
@@ -36,8 +35,26 @@ public class CustomDialogFragment extends DialogFragment {
 	}
 
 	@Override
+	public void onStart() {
+		super.onStart();
+//		Window win = getDialog().getWindow();
+//		win.setBackgroundDrawable( new ColorDrawable((Color.parseColor("#FFFFFF"))));
+//		DisplayMetrics dm = new DisplayMetrics();
+//		getActivity().getWindowManager().getDefaultDisplay().getMetrics( dm );
+//		WindowManager.LayoutParams params = win.getAttributes();
+//		params.gravity = Gravity.CENTER;
+//		params.width =  ViewGroup.LayoutParams.MATCH_PARENT;
+//		params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+//		win.setAttributes(params);
+
+		DisplayMetrics dm = new DisplayMetrics();
+		getActivity().getWindowManager().getDefaultDisplay().getMetrics( dm );
+		getDialog().getWindow().setLayout(dm.widthPixels,  getDialog().getWindow().getAttributes().height);
+	}
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(layoutResID, container);
+		setDialogDefaultTitle(isShowTitle);
+		View view = inflater.inflate(layoutResID, container,false);
 		loopAndSetListener(view);
 		return view;
 	}
@@ -90,9 +107,15 @@ public class CustomDialogFragment extends DialogFragment {
 		}
 	}
 
+	private void setDialogDefaultTitle(boolean isShowTitle){
+		if(!isShowTitle){
+			getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+		}
+	}
+
 
 	public void show(FragmentManager manager) {
-		show(manager, "CustomDialogFragment");
+		show(manager, "dingtoneDialog");
 	}
 	@Override
 	public void show(FragmentManager manager, String tag) {
@@ -113,6 +136,7 @@ public class CustomDialogFragment extends DialogFragment {
 
 	public CustomDialogFragment(Builder builder) {
 		this.layoutResID = builder.layoutResID;
+		this.isShowTitle = builder.isShowTitle;
 		this.onDismissListener = builder.onDismissListener;
 		this.onCancelListener = builder.onCancelListener;
 		this.childrenIdClickListenerMap = builder.childrenIdClickListenerMap;
@@ -125,6 +149,7 @@ public class CustomDialogFragment extends DialogFragment {
 		private final FragmentManager fragmentManager;
 		private CustomDialogFragment customDialog = null;
 		private boolean cancelable = true;
+		private boolean isShowTitle = false;
 
 		private DialogInterface.OnDismissListener onDismissListener;
 		private DialogInterface.OnCancelListener onCancelListener;
@@ -147,6 +172,11 @@ public class CustomDialogFragment extends DialogFragment {
 
 		public Builder setCancelable(boolean cancelable) {
 			this.cancelable = cancelable;
+			return this;
+		}
+
+		public Builder setShowTitle(boolean showTitle) {
+			isShowTitle = showTitle;
 			return this;
 		}
 
