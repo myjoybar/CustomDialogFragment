@@ -41,10 +41,8 @@ public class MainActivity extends AppCompatActivity {
 						Log.i(TAG,"imv_close");
 						builder.disMiss();
 					}
-				});
-
+				}).setVisibleStatus(R.id.cl_get_free_credit,View.GONE);
 				builder.show();
-
 
 			}
 		});

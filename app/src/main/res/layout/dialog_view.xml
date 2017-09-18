@@ -4,8 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/selector_round_white_bg"
-    >
+    android:background="@drawable/selector_round_white_bg">
 
 
     <TextView
@@ -26,13 +25,13 @@
         android:id="@+id/imv_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
         android:src="@mipmap/ic_launcher"
         android:textSize="20sp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_title"
-        />
+        android:layout_marginEnd="8dp"/>
 
     <ImageView
         android:id="@+id/imv_credits"
@@ -64,7 +63,6 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imv_credits"/>
 
-
     <TextView
         android:id="@+id/tv_purchase"
         android:layout_width="0dp"
@@ -79,31 +77,84 @@
         android:text="Purchase 500 Credits"
         android:textColor="#FFFFFF"
         android:textSize="16sp"
-
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_des"
-        app:layout_constraintHorizontal_bias="0.0"/>
+        app:layout_constraintTop_toBottomOf="@+id/tv_des"/>
+
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/cl_get_free_credit"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_purchase"
+        android:background="@drawable/selector_coupon_round_blue_bg" >
+
+        <TextView
+            android:id="@+id/tv_purchase_bonus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_coupon_round_blue_stroke_bg"
+            android:gravity="center"
+            android:text="Purchase 500 Credits"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+          />
+
+        <TextView
+            android:id="@+id/tv_bonus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            android:background="@drawable/selector_coupon_round_blue_stroke_bg"
+            android:gravity="center"
+            android:text="100 Credits Bonus"
+            android:textColor="#FFFFFF"
+            android:textSize="12sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_purchase_bonus"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+    </android.support.constraint.ConstraintLayout>
 
 
     <TextView
         android:id="@+id/tv_get_free_credit"
         android:layout_width="0dp"
         android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="20dp"
+        android:background="@drawable/selector_coupon_round_blue_stroke_bg"
         android:gravity="center"
         android:text="Get free credits"
         android:textColor="#018EF0"
         android:textSize="16sp"
-        android:background="@drawable/selector_coupon_round_blue_stroke_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_purchase"/>
+        app:layout_constraintTop_toBottomOf="@+id/cl_get_free_credit"/>
 
 </android.support.constraint.ConstraintLayout>
+
+
+
+
