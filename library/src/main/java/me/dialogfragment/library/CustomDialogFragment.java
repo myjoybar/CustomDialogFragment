@@ -7,14 +7,11 @@ import android.support.annotation.LayoutRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.util.ArrayMap;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-
-import java.util.Map;
 
 /**
  * Created by joybar on 2017/9/1.
@@ -24,13 +21,10 @@ public class CustomDialogFragment extends DialogFragment {
 	@LayoutRes
 	private int layoutResID;
 	private boolean isShowTitle = false;
-	private Map<Integer, View.OnLongClickListener> childrenIdLongClickListenerMap;
-	private Map<Integer, View.OnClickListener> childrenIdClickListenerMap;
-	private Map<Integer, Integer> invisibleViewMap;
-	private Map<Integer, Integer> visibleViewMap;
-	private Map<Integer, Integer> goneViewMap;
 	private DialogInterface.OnDismissListener onDismissListener;
 	private DialogInterface.OnCancelListener onCancelListener;
+	private DialogLifecycle dialogLifecycle;
+	private View view;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -58,8 +52,10 @@ public class CustomDialogFragment extends DialogFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		setDialogDefaultTitle(isShowTitle);
-		View view = inflater.inflate(layoutResID, container, false);
-		initView(view);
+		view = inflater.inflate(layoutResID, container, false);
+		if (null != dialogLifecycle) {
+			dialogLifecycle.onViewCreated();
+		}
 		return view;
 	}
 
@@ -79,30 +75,15 @@ public class CustomDialogFragment extends DialogFragment {
 		return null;
 	}
 
+	//	private <T extends View> T findView(@IdRes int id) {
+//		return (T) getDialog().findViewById(id);
+//	}
 	private <T extends View> T findView(@IdRes int id) {
-		return (T) getDialog().findViewById(id);
+		return (T) view.findViewById(id);
 	}
 
 	private <T extends View> T findView(@IdRes int id, View view) {
 		return (T) view.findViewById(id);
-	}
-
-	private void initView(View view) {
-		for (Integer id : childrenIdClickListenerMap.keySet()) {
-			findView(id, view).setOnClickListener(childrenIdClickListenerMap.get(id));
-		}
-		for (Integer id : childrenIdLongClickListenerMap.keySet()) {
-			findView(id, view).setOnLongClickListener(childrenIdLongClickListenerMap.get(id));
-		}
-		for (Integer id : invisibleViewMap.keySet()) {
-			findView(id, view).setVisibility(View.INVISIBLE);
-		}
-		for (Integer id : visibleViewMap.keySet()) {
-			findView(id, view).setVisibility(View.VISIBLE);
-		}
-		for (Integer id : goneViewMap.keySet()) {
-			findView(id, view).setVisibility(View.GONE);
-		}
 	}
 
 
@@ -156,11 +137,8 @@ public class CustomDialogFragment extends DialogFragment {
 		this.isShowTitle = builder.isShowTitle;
 		this.onDismissListener = builder.onDismissListener;
 		this.onCancelListener = builder.onCancelListener;
-		this.childrenIdClickListenerMap = builder.childrenIdClickListenerMap;
-		this.childrenIdLongClickListenerMap = builder.childrenIdLongClickListenerMap;
-		this.invisibleViewMap = builder.invisibleViewMap;
-		this.visibleViewMap = builder.visibleViewMap;
-		this.goneViewMap = builder.goneViewMap;
+		this.dialogLifecycle = builder.dialogLifecycle;
+
 	}
 
 	public static class Builder {
@@ -173,11 +151,7 @@ public class CustomDialogFragment extends DialogFragment {
 
 		private DialogInterface.OnDismissListener onDismissListener;
 		private DialogInterface.OnCancelListener onCancelListener;
-		private Map<Integer, View.OnLongClickListener> childrenIdLongClickListenerMap = new ArrayMap<>();
-		private Map<Integer, View.OnClickListener> childrenIdClickListenerMap = new ArrayMap<>();
-		private Map<Integer, Integer> invisibleViewMap = new ArrayMap<>();
-		private Map<Integer, Integer> visibleViewMap = new ArrayMap<>();
-		private Map<Integer, Integer> goneViewMap = new ArrayMap<>();
+		private DialogLifecycle dialogLifecycle;
 
 		public Builder(int layoutResID, FragmentManager fragmentManager) {
 			this.layoutResID = layoutResID;
@@ -203,26 +177,12 @@ public class CustomDialogFragment extends DialogFragment {
 			return this;
 		}
 
-		public Builder setOnClickListener(@IdRes int id, View.OnClickListener onClickListener) {
-			childrenIdClickListenerMap.put(id, onClickListener);
+
+		public Builder setDialogLifecycle(DialogLifecycle dialogLifecycle) {
+			this.dialogLifecycle = dialogLifecycle;
 			return this;
 		}
 
-		public Builder setVisibleStatus(@IdRes int id, int visibleStatus) {
-			if (visibleStatus == View.GONE) {
-				goneViewMap.put(id, visibleStatus);
-			} else if (visibleStatus == View.INVISIBLE) {
-				invisibleViewMap.put(id, visibleStatus);
-			} else if (visibleStatus == View.VISIBLE) {
-				visibleViewMap.put(id, visibleStatus);
-			}
-			return this;
-		}
-
-		public Builder setOnLongClickListener(@IdRes int id, View.OnLongClickListener onLongClickListener) {
-			childrenIdLongClickListenerMap.put(id, onLongClickListener);
-			return this;
-		}
 
 		public Builder setOnDismissListener(DialogInterface.OnDismissListener onDismissListener) {
 			this.onDismissListener = onDismissListener;
@@ -232,6 +192,10 @@ public class CustomDialogFragment extends DialogFragment {
 		public Builder setOnCancelListener(DialogInterface.OnCancelListener onCancelListener) {
 			this.onCancelListener = onCancelListener;
 			return this;
+		}
+
+		public View getViewById(@IdRes int id) {
+			return create().findView(id);
 		}
 
 		public void show() {
@@ -250,6 +214,10 @@ public class CustomDialogFragment extends DialogFragment {
 			}
 		}
 
+	}
+
+	public interface DialogLifecycle {
+		void onViewCreated();
 	}
 
 }

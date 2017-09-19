@@ -29,20 +29,22 @@ public class MainActivity extends AppCompatActivity {
 					public void onCancel(DialogInterface dialogInterface) {
 						Log.i(TAG,"onCancel");
 					}
-				}).setOnClickListener(R.id.imv_close, new View.OnClickListener() {
+				}).setDialogLifecycle(new CustomDialogFragment.DialogLifecycle() {
 					@Override
-					public void onClick(View view) {
-						Log.i(TAG,"imv_close");
-						builder.disMiss();
+					public void onViewCreated() {
+						Log.i(TAG,"onViewCreated1");
+						builder.getViewById(R.id.imv_close).setVisibility(View.GONE);
+						builder.getViewById(R.id.tv_purchase).setOnClickListener(new View.OnClickListener() {
+							@Override
+							public void onClick(View view) {
+								Log.i(TAG,"tv_purchase");
+								builder.disMiss();
+							}
+						});
 					}
-				}).setOnClickListener(R.id.tv_purchase, new View.OnClickListener() {
-					@Override
-					public void onClick(View view) {
-						Log.i(TAG,"imv_close");
-						builder.disMiss();
-					}
-				}).setVisibleStatus(R.id.cl_get_free_credit,View.GONE);
+				});
 				builder.show();
+
 
 			}
 		});
